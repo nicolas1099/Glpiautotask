@@ -1,0 +1,73 @@
+{# templates/form.html.twig #}
+
+{% extends "generic_page.html.twig" %}
+
+{% block title %}
+    {{ __('Registrar trabajo técnico', 'techtask') }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2>{{ __('Registrar trabajo realizado', 'techtask') }}</h2>
+                <p>{{ __('Completa los siguientes datos para registrar el tiempo trabajado', 'techtask') }}</p>
+            </div>
+            
+            <form method="post" action="{{ 'front/form.php' | path }}">
+                <div class="box-body">
+                    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+                    
+                    <!-- Campo 1: Categoría -->
+                    <div class="form-group">
+                        <label for="category_id">{{ __('Categoría', 'techtask') }}</label>
+                        <select name="category_id" id="category_id" class="form-control">
+                            <option value="">-- {{ __('Selecciona una categoría', 'techtask') }} --</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Campo 2: Duración -->
+                    <div class="form-group">
+                        <label for="duration">{{ __('Tiempo trabajado (minutos)', 'techtask') }}</label>
+                        <input type="number" name="duration" id="duration" class="form-control" 
+                               min="1" required placeholder="{{ __('Ej: 30, 45, 60', 'techtask') }}">
+                        <p class="help-block">{{ __('Ingresa solo números (minutos)', 'techtask') }}</p>
+                    </div>
+                    
+                    <!-- Campo 3: Descripción -->
+                    <div class="form-group">
+                        <label for="description">{{ __('Descripción del trabajo', 'techtask') }}</label>
+                        <textarea name="description" id="description" class="form-control" 
+                                  rows="5" required placeholder="{{ __('Explica detalladamente...', 'techtask') }}"></textarea>
+                    </div>
+                </div>
+                
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary">{{ __('Registrar tarea', 'techtask') }}</button>
+                    <button type="reset" class="btn btn-default">{{ __('Limpiar', 'techtask') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function() {
+    // Validación adicional en cliente
+    $('form').on('submit', function() {
+        var duration = $('#duration').val();
+        if (duration < 1) {
+            alert('{{ __('El tiempo debe ser mayor a 0 minutos', 'techtask') }}');
+            return false;
+        }
+        return true;
+    });
+});
+</script>
+{% endblock %}

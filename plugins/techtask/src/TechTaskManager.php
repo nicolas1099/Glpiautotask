@@ -1,0 +1,108 @@
+<?php
+
+// src/TechTask.php
+
+namespace GlpiPlugin\Techtask;
+
+use Ticket;
+use TicketTask;
+use Session;
+use Html;
+
+class TechTaskManager
+{
+    /**
+     * Procesar el formulario y crear ticket + tarea
+     */
+    public static function processForm($post_data)
+    {
+        global $DB;
+        
+        // Validar datos requeridos
+        if (empty($post_data['duration']) || empty($post_data['description'])) {
+            Session::addMessageAfterRedirect(__('Faltan datos obligatorios', 'techtask'), false, 'ERROR');
+            return false;
+        }
+        
+        // 1. Crear el ticket resuelto
+        $ticket = new Ticket();
+        
+        $ticket_data = [
+            'name'                => mb_substr($post_data['description'], 0, 100),
+            'content'             => $post_data['description'],
+            'status'              => Ticket::SOLVED,
+            'entities_id'         => Session::getActiveEntity(),
+            'users_id_recipient'  => Session::getLoginUserID(),
+            'type'                => Ticket::INCIDENT_TYPE,
+            'date'                => date('Y-m-d H:i:s'),
+            'closedate'           => date('Y-m-d H:i:s'),
+            'solution'            => __('Trabajo completado', 'techtask'),
+            'solutiontypes_id'    => 1
+        ];
+        
+        // Añadir categoría si se seleccionó
+        if (!empty($post_data['category_id'])) {
+            $ticket_data['itilcategories_id'] = (int)$post_data['category_id'];
+        }
+        
+        $ticket_id = $ticket->add($ticket_data);
+        
+        if (!$ticket_id) {
+            Session::addMessageAfterRedirect(__('Error al crear el ticket', 'techtask'), false, 'ERROR');
+            return false;
+        }
+        
+        // 2. Añadir tarea con la duración (en segundos)
+        $task = new TicketTask();
+        $task_data = [
+            'tickets_id'  => $ticket_id,
+            'content'     => $post_data['description'],
+            'users_id'    => Session::getLoginUserID(),
+            'actiontime'  => (int)$post_data['duration'] * 60, // minutos a segundos
+            'state'       => 2, // DONE (Planificado completado)
+            'date'        => date('Y-m-d H:i:s')
+        ];
+        
+        $task_id = $task->add($task_data);
+        
+        // 3. Guardar en nuestra tabla personalizada (opcional)
+        $DB->query(sprintf(
+            "INSERT INTO `glpi_plugin_techtask_records` 
+            (tickets_id, users_id, category_id, duration_minutes, description) 
+            VALUES (%d, %d, %d, %d, '%s')",
+            $ticket_id,
+            Session::getLoginUserID(),
+            (int)($post_data['category_id'] ?? 0),
+            (int)$post_data['duration'],
+            $DB->escape($post_data['description'])
+        ));
+        
+        return $ticket_id;
+    }
+    
+    /**
+     * Obtener categorías para el desplegable
+     */
+    public static function getCategories()
+    {
+        global $DB;
+        
+        $categories = [];
+        $query = "SELECT id, name FROM glpi_itilcategories WHERE is_active = 1 ORDER BY name";
+        $result = $DB->query($query);
+        
+        while ($row = $DB->fetchAssoc($result)) {
+            $categories[] = $row;
+        }
+        
+        return $categories;
+    }
+    
+    /**
+     * Verificar permisos del usuario
+     */
+    public static function checkRights()
+    {
+        return Session::haveRight('ticket', CREATE);
+    }
+}
