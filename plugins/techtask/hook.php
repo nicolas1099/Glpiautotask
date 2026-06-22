@@ -37,31 +37,41 @@
 function plugin_techtask_install(): bool
 {
     global $DB;
+    
+    // Log para depuración
+    Toolbox::logInFile("techtask", "Iniciando instalación del plugin...\n");
 
     // Verificar conexión a DB
     if (!isset($DB) || !$DB) {
+        Toolbox::logInFile("techtask", "ERROR: No hay conexión a la base de datos (\$DB no definida).\n");
         return false;
     }
 
     // Crear tabla de registros si no existe
     if (!$DB->tableExists('glpi_plugin_techtask_records')) {
-        $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_techtask_records` (
+        $query = "CREATE TABLE `glpi_plugin_techtask_records` (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
             `tickets_id` INT(11) NOT NULL,
             `users_id` INT(11) NOT NULL,
             `category_id` INT(11) DEFAULT NULL,
             `duration_minutes` INT(11) NOT NULL,
             `description` TEXT,
-            `date_creation` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `date_creation` DATETIME DEFAULT NULL,
             PRIMARY KEY (`id`),
             KEY `tickets_id` (`tickets_id`),
             KEY `users_id` (`users_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
         
         if (!$DB->query($query)) {
+            Toolbox::logInFile("techtask", "ERROR: Fallo al crear la tabla: " . $DB->error() . "\n");
             return false;
         }
+        Toolbox::logInFile("techtask", "Tabla glpi_plugin_techtask_records creada con éxito.\n");
+    } else {
+        Toolbox::logInFile("techtask", "La tabla ya existía. Saltando creación.\n");
     }
+    
+    Toolbox::logInFile("techtask", "Instalación completada con éxito.\n");
     return true;
 }
 
