@@ -27,6 +27,4 @@ function plugin_init_techtask() {
     $PLUGIN_HOOKS['menu_toadd']['techtask'] = ['helpdesk' => 'GlpiPlugin\Techtask\Menu'];
 }
 
-function plugin_techtask_uninstall() {
-    return true;
-}
+// End of plugin_init_techtask
