@@ -16,8 +16,6 @@ if (!TechTaskManager::checkRights()) {
     Html::displayRightError();
     exit();
 }
-die("PERMISOS OK");
-
 // Procesar el envío del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar CSRF
@@ -43,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Cargar categorías
 $categories = TechTaskManager::getCategories() ?? [];
+die("CATEGORIAS OK");
 
 // Renderizar usando Twig - GLPI 10
 TemplateRenderer::getInstance()->display('@techtask/form.html.twig', [
