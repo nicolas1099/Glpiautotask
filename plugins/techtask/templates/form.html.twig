@@ -1,83 +1,13 @@
 {# templates/form.html.twig #}
 
-{% extends "layout/page_card.html.twig" %}
-
-{% block title %}
-    {{ __('Registrar trabajo técnico', 'techtask') }}
-{% endblock %}
-
-{% block card_content %}
 <div class="row">
     <div class="col-12">
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">{{ __('Registrar trabajo realizado', 'techtask') }}</h3>
-            </div>
-            
-            <form method="post" action="{{ 'front/form.php' | path }}">
-                <div class="card-body">
-                    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-                    
-                    <!-- Campo 1: Tiempo -->
-                    <div class="mb-3">
-                        <label for="duration" class="form-label">{{ __('Tiempo (minutos)', 'techtask') }}</label>
-                        <input type="number" name="duration" id="duration" class="form-control" 
-                               min="1" required placeholder="{{ __('Ej: 30, 45, 60', 'techtask') }}">
-                    </div>
-
-                    <!-- Campo 2: Categoría -->
-                    <div class="mb-3">
-                        <label for="category_id" class="form-label">{{ __('Categoría', 'techtask') }}</label>
-                        <select name="category_id" id="category_id" class="form-select">
-                            <option value="">-- {{ __('Selecciona una categoría', 'techtask') }} --</option>
-                            {% for category in categories %}
-                                <option value="{{ category.id }}">{{ category.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    
-                    <!-- Campo 3: Título -->
-                    <div class="mb-3">
-                        <label for="name" class="form-label">{{ __('Título', 'techtask') }}</label>
-                        <input type="text" name="name" id="name" class="form-control" 
-                               required placeholder="{{ __('Título de la tarea y el ticket', 'techtask') }}">
-                    </div>
-                    
-                    <!-- Campo 4: Descripción -->
-                    <div class="mb-3">
-                        <label for="content" class="form-label">{{ __('Descripción', 'techtask') }}</label>
-                        <textarea name="content" id="content" class="form-control" 
-                                  rows="5" required placeholder="{{ __('Descripción detallada del ticket', 'techtask') }}"></textarea>
-                    </div>
-                </div>
-                
-                <div class="card-footer d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-check-circle me-1"></i>
-                        {{ __('Crear y Cerrar Ticket', 'techtask') }}
-                    </button>
-                    <button type="reset" class="btn btn-outline-secondary">
-                        <i class="fas fa-undo me-1"></i>
-                        {{ __('Limpiar', 'techtask') }}
-                    </button>
-                </div>
-            </form>
-        </div>
+        <h1>{{ __('Prueba básica de Twig', 'techtask') }}</h1>
+        <p>Si ves esto, Twig funcionando correctamente.</p>
+        
+        <form method="post" action="{{ 'front/form.php' | path }}">
+            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary">{{ __('Probar Botón', 'techtask') }}</button>
+        </form>
     </div>
 </div>
-{% endblock %}
-
-{% block javascript %}
-<script>
-$(document).ready(function() {
-    $('form').on('submit', function() {
-        var duration = $('#duration').val();
-        if (duration < 1) {
-            alert('{{ __('El tiempo debe ser mayor a 0 minutos', 'techtask') }}');
-            return false;
-        }
-        return true;
-    });
-});
-</script>
-{% endblock %}
