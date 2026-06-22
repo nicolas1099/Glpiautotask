@@ -36,48 +36,8 @@
  */
 function plugin_techtask_install(): bool
 {
-    // Log para depuración
-    Toolbox::logInFile("techtask", "Iniciando instalación del plugin...\n");
-
-    Toolbox::logInFile("techtask", "Paso 1: Obteniendo conexión global \$DB...\n");
-    global $DB;
-
-    // Verificar conexión a DB
-    if (!isset($DB) || !$DB) {
-        Toolbox::logInFile("techtask", "ERROR: No hay conexión a la base de datos (\$DB no definida).\n");
-        return false;
-    }
-    Toolbox::logInFile("techtask", "Paso 2: Conexión \$DB verificada correctamente.\n");
-
-    Toolbox::logInFile("techtask", "Paso 3: Verificando si existe la tabla (vía SQL directo)...\n");
-    $tableName = 'glpi_plugin_techtask_records';
-    $res = $DB->query("SHOW TABLES LIKE '$tableName'");
-    
-    if ($DB->numrows($res) == 0) {
-        Toolbox::logInFile("techtask", "Paso 4: La tabla no existe. Creándola...\n");
-        $query = "CREATE TABLE `$tableName` (
-            `id` INT(11) NOT NULL AUTO_INCREMENT,
-            `tickets_id` INT(11) NOT NULL,
-            `users_id` INT(11) NOT NULL,
-            `category_id` INT(11) DEFAULT NULL,
-            `duration_minutes` INT(11) NOT NULL,
-            `description` TEXT,
-            `date_creation` DATETIME DEFAULT NULL,
-            PRIMARY KEY (`id`),
-            KEY `tickets_id` (`tickets_id`),
-            KEY `users_id` (`users_id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-        
-        if (!$DB->query($query)) {
-            Toolbox::logInFile("techtask", "ERROR: Fallo al crear la tabla: " . $DB->error() . "\n");
-            return false;
-        }
-        Toolbox::logInFile("techtask", "Tabla $tableName creada con éxito.\n");
-    } else {
-        Toolbox::logInFile("techtask", "Paso 4: La tabla ya existe. Saltando creación.\n");
-    }
-    
-    Toolbox::logInFile("techtask", "Paso 5: Instalación completada con éxito.\n");
+    // Si la tabla no se crea automáticamente por bloqueos en el servidor,
+    // se recomienda crearla manualmente usando el archivo create_table.sql
     return true;
 }
 
