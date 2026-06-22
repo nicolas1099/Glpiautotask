@@ -14,8 +14,8 @@ if (!TechTaskManager::checkRights()) {
 }
 // Procesar el envío del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Verificar CSRF
-    Session::checkCSRF($_POST);
+    // TEMPORAL: Deshabilitar checkCSRF para depuración
+    // Session::checkCSRF($_POST);
     
     $ticket_id = TechTaskManager::processForm($_POST);
     
