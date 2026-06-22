@@ -32,12 +32,15 @@ class TechTaskManager
             'content'             => $post_data['content'],
             'status'              => Ticket::SOLVED,
             'entities_id'         => Session::getActiveEntity(),
-            'users_id_recipient'  => Session::getLoginUserID(),
             'type'                => Ticket::INCIDENT_TYPE,
             'date'                => date('Y-m-d H:i:s'),
             'closedate'           => date('Y-m-d H:i:s'),
             'solution'            => __('Trabajo completado', 'techtask'),
-            'solutiontypes_id'    => 1
+            'solutiontypes_id'    => 1,
+            // Asignar al técnico logueado
+            '_users_id_assign'    => [Session::getLoginUserID()],
+            // El técnico también es el solicitante en este caso (o podríamos dejarlo vacío)
+            '_users_id_requester' => [Session::getLoginUserID()]
         ];
         
         // Añadir categoría si se seleccionó
