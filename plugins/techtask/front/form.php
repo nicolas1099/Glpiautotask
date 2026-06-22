@@ -3,11 +3,11 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-die("CONEXION ESTABLECIDA CON FORM.PHP");
 
 // front/form.php
 
 include('../../../inc/includes.php');
+die("CONEXION CON INCLUDES OK");
 
 use GlpiPlugin\Techtask\TechTaskManager;
 use Glpi\Application\View\TemplateRenderer;
