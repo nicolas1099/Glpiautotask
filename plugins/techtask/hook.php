@@ -36,17 +36,20 @@
  */
 function plugin_techtask_install(): bool
 {
-    global $DB;
-    
     // Log para depuración
     Toolbox::logInFile("techtask", "Iniciando instalación del plugin...\n");
+
+    Toolbox::logInFile("techtask", "Paso 1: Obteniendo conexión global \$DB...\n");
+    global $DB;
 
     // Verificar conexión a DB
     if (!isset($DB) || !$DB) {
         Toolbox::logInFile("techtask", "ERROR: No hay conexión a la base de datos (\$DB no definida).\n");
         return false;
     }
+    Toolbox::logInFile("techtask", "Paso 2: Conexión \$DB verificada correctamente.\n");
 
+    Toolbox::logInFile("techtask", "Paso 3: Verificando si existe la tabla...\n");
     // Crear tabla de registros si no existe
     if (!$DB->tableExists('glpi_plugin_techtask_records')) {
         $query = "CREATE TABLE `glpi_plugin_techtask_records` (
