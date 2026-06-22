@@ -12,6 +12,8 @@ if (!TechTaskManager::checkRights()) {
     exit();
 }
 
+Html::header(__('TechTask', 'techtask'), $_SERVER['PHP_SELF'], 'tools', 'GlpiPlugin\Techtask\Menu');
+
 // Procesar el envío del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     

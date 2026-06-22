@@ -108,6 +108,7 @@ class TechTaskManager
      */
     public static function checkRights()
     {
+        // CREATE es una constante global en GLPI para permisos de creación
         return Session::haveRight('ticket', CREATE);
     }
 }
