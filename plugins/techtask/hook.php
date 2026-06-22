@@ -36,6 +36,25 @@
  */
 function plugin_techtask_install(): bool
 {
+    global $DB;
+
+    // Crear tabla de registros si no existe
+    if (!$DB->tableExists('glpi_plugin_techtask_records')) {
+        $query = "CREATE TABLE `glpi_plugin_techtask_records` (
+            `id` INT(11) NOT NULL AUTO_INCREMENT,
+            `tickets_id` INT(11) NOT NULL,
+            `users_id` INT(11) NOT NULL,
+            `category_id` INT(11) DEFAULT NULL,
+            `duration_minutes` INT(11) NOT NULL,
+            `description` TEXT,
+            `date_creation` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `tickets_id` (`tickets_id`),
+            KEY `users_id` (`users_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+        
+        $DB->query($query);
+    }
     return true;
 }
 
@@ -44,12 +63,5 @@ function plugin_techtask_install(): bool
  */
 function plugin_techtask_uninstall(): bool
 {
-    return true;
-}
-function plugin_install () { 
-    global $DB; 
-    $DB->query("INSERT INTO `glpi_plugin_techtask_config` (`id`, `csrf_compat`) VALUES (1, 1) 
-                ON DUPLICATE KEY UPDATE`csrf_compat` = 1");
-
     return true;
 }
