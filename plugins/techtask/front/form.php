@@ -45,7 +45,7 @@ echo '  <div class="col-12 col-md-8 offset-md-2">';
 echo '    <div class="card card-primary">';
 echo '      <div class="card-header"><h3 class="card-title">' . __('Registrar trabajo realizado', 'techtask') . '</h3></div>';
 echo '      <form method="post" action="' . Plugin::getWebDir('techtask') . '/front/form.php">';
-echo '        <input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
 echo '        <div class="card-body">';
 
 // Campo Título
