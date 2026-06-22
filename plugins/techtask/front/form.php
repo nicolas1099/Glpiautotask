@@ -14,8 +14,8 @@ if (!TechTaskManager::checkRights()) {
 }
 // Procesar el envío del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // TEMPORAL: Deshabilitar checkCSRF para depuración
-    // Session::checkCSRF($_POST);
+    // Verificar CSRF
+    Session::checkCSRF($_POST);
     
     $ticket_id = TechTaskManager::processForm($_POST);
     
@@ -44,8 +44,11 @@ echo '<div class="row m-4">';
 echo '  <div class="col-12 col-md-8 offset-md-2">';
 echo '    <div class="card card-primary">';
 echo '      <div class="card-header"><h3 class="card-title">' . __('Registrar trabajo realizado', 'techtask') . '</h3></div>';
-echo '      <form method="post" action="' . Plugin::getWebDir('techtask') . '/front/form.php">';
+
+// Abrir formulario
+echo '<form method="post" action="' . Plugin::getWebDir('techtask') . '/front/form.php">';
 echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
+
 echo '        <div class="card-body">';
 
 // Campo Título
@@ -82,7 +85,9 @@ echo '        <div class="card-footer d-flex justify-content-between">';
 echo '          <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i> ' . __('Crear y Cerrar Ticket', 'techtask') . '</button>';
 echo '          <button type="reset" class="btn btn-outline-secondary">' . __('Limpiar', 'techtask') . '</button>';
 echo '        </div>';
+
 echo '      </form>';
+
 echo '    </div>';
 echo '  </div>';
 echo '</div>';
