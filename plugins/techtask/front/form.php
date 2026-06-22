@@ -7,7 +7,6 @@ error_reporting(E_ALL);
 // front/form.php
 
 include('../../../inc/includes.php');
-die("CONEXION CON INCLUDES OK");
 
 use GlpiPlugin\Techtask\TechTaskManager;
 use Glpi\Application\View\TemplateRenderer;
@@ -17,6 +16,7 @@ if (!TechTaskManager::checkRights()) {
     Html::displayRightError();
     exit();
 }
+die("PERMISOS OK");
 
 // Procesar el envío del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
