@@ -7,9 +7,19 @@ include('../../../inc/includes.php');
 use GlpiPlugin\Techtask\TechTaskManager;
 use Glpi\Application\View\TemplateRenderer;
 
+// Asegurar que el cargador de clases esté disponible
+if (!class_exists('GlpiPlugin\Techtask\TechTaskManager')) {
+    include_once(__DIR__ . '/../setup.php');
+}
+
 // Verificar permisos
-if (!TechTaskManager::checkRights()) {
-    Html::displayRightError();
+try {
+    if (!TechTaskManager::checkRights()) {
+        Html::displayRightError();
+        exit();
+    }
+} catch (\Throwable $e) {
+    echo "Fallo al cargar TechTaskManager: " . $e->getMessage();
     exit();
 }
 // Procesar el envío del formulario
