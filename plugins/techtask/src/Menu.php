@@ -9,7 +9,7 @@ class Menu extends CommonGLPI
 {
     public static function getMenuName()
     {
-        return __('TechTask', 'techtask');
+        return __('Autotask', 'techtask');
     }
 
     public static function getMenuContent()

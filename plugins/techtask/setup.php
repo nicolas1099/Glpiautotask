@@ -22,9 +22,9 @@ function plugin_version_techtask() {
 function plugin_init_techtask() {
     global $PLUGIN_HOOKS;
     
-    // Registrar el menú principal (GLPI 10 estilo)
+    // Registrar el menú principal en el grupo "Soporte" (helpdesk)
     $PLUGIN_HOOKS['csrf_compliant']['techtask'] = true;
-    $PLUGIN_HOOKS['menu_toadd']['techtask'] = ['tools' => 'GlpiPlugin\Techtask\Menu'];
+    $PLUGIN_HOOKS['menu_toadd']['techtask'] = ['helpdesk' => 'GlpiPlugin\Techtask\Menu'];
     
     // También puedes añadir un enlace en el menú "Tools" o "Admin"
     $PLUGIN_HOOKS['post_install']['techtask'] = 'plugin_techtask_post_install';
