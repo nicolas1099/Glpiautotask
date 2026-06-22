@@ -96,6 +96,10 @@ class TechTaskManager
         $query = "SELECT id, name FROM glpi_itilcategories WHERE is_active = 1 ORDER BY name";
         $result = $DB->query($query);
         
+        if ($result === false) {
+            die("ERROR EN QUERY: " . $DB->error());
+        }
+        
         while ($row = $DB->fetchAssoc($result)) {
             $categories[] = $row;
         }

@@ -41,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Cargar categorías
 $categories = TechTaskManager::getCategories() ?? [];
-die("CATEGORIAS OK");
 
 // Renderizar usando Twig - GLPI 10
 TemplateRenderer::getInstance()->display('@techtask/form.html.twig', [
