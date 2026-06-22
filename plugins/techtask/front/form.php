@@ -5,6 +5,7 @@
 include('../../../inc/includes.php');
 
 use GlpiPlugin\Techtask\TechTaskManager;
+use Glpi\Application\View\TemplateRenderer;
 
 // Verificar permisos
 if (!TechTaskManager::checkRights()) {
@@ -12,11 +13,8 @@ if (!TechTaskManager::checkRights()) {
     exit();
 }
 
-Html::header(__('Autotask', 'techtask'), $_SERVER['PHP_SELF'], 'helpdesk', 'GlpiPlugin\Techtask\Menu');
-
 // Procesar el envío del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
     // Verificar CSRF
     Session::checkCSRF($_POST);
     
@@ -28,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             true,
             1 // INFO
         );
-        // Redirigir al mismo formulario para limpiar
         Html::redirect(Plugin::getWebDir('techtask') . '/front/form.php');
     } else {
         Session::addMessageAfterRedirect(
@@ -39,15 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Cargar categorías para el formulario
-$categories = TechTaskManager::getCategories();
+// Cargar categorías
+$categories = TechTaskManager::getCategories() ?? [];
 
-// Renderizar usando Twig
-$twig = Glpi\Application\View\TemplateRenderer::getInstance();
-$twig->display('@techtask/form.html.twig', [
+// Renderizar usando Twig - GLPI 10
+TemplateRenderer::getInstance()->display('@techtask/form.html.twig', [
     'categories' => $categories,
-    'page_title' => __('TechTask - Registro manual de tiempo', 'techtask')
+    'page_title' => __('Autotask - Registro de tiempo', 'techtask')
 ]);
-
-Html::footer();
 
