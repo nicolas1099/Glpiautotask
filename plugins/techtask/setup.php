@@ -13,7 +13,7 @@ function plugin_version_techtask() {
         'requirements'   => [
             'glpi' => [
                 'min' => '10.0.0',
-                'max' => '11.0.0'
+                'max' => '12.0.0'
             ]
         ]
     ];
