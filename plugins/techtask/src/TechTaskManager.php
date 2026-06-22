@@ -19,8 +19,8 @@ class TechTaskManager
         global $DB;
         
         // Validar datos requeridos
-        if (empty($post_data['duration']) || empty($post_data['description'])) {
-            Session::addMessageAfterRedirect(__('Faltan datos obligatorios', 'techtask'), false, 'ERROR');
+        if (empty($post_data['duration']) || empty($post_data['content']) || empty($post_data['name'])) {
+            Session::addMessageAfterRedirect(__('Faltan datos obligatorios', 'techtask'), false, 3);
             return false;
         }
         
@@ -28,8 +28,8 @@ class TechTaskManager
         $ticket = new Ticket();
         
         $ticket_data = [
-            'name'                => mb_substr($post_data['description'], 0, 100),
-            'content'             => $post_data['description'],
+            'name'                => $post_data['name'],
+            'content'             => $post_data['content'],
             'status'              => Ticket::SOLVED,
             'entities_id'         => Session::getActiveEntity(),
             'users_id_recipient'  => Session::getLoginUserID(),
@@ -48,24 +48,29 @@ class TechTaskManager
         $ticket_id = $ticket->add($ticket_data);
         
         if (!$ticket_id) {
-            Session::addMessageAfterRedirect(__('Error al crear el ticket', 'techtask'), false, 'ERROR');
+            Session::addMessageAfterRedirect(__('Error al crear el ticket', 'techtask'), false, 3);
             return false;
         }
         
         // 2. Añadir tarea con la duración (en segundos)
         $task = new TicketTask();
         $task_data = [
-            'tickets_id'  => $ticket_id,
-            'content'     => $post_data['description'],
-            'users_id'    => Session::getLoginUserID(),
-            'actiontime'  => (int)$post_data['duration'] * 60, // minutos a segundos
-            'state'       => 2, // DONE (Planificado completado)
-            'date'        => date('Y-m-d H:i:s')
+            'tickets_id'      => $ticket_id,
+            'content'         => $post_data['name'], // Título de la tarea
+            'users_id'        => Session::getLoginUserID(),
+            'actiontime'      => (int)$post_data['duration'] * 60, // minutos a segundos
+            'state'           => 2, // DONE (Completado)
+            'date'            => date('Y-m-d H:i:s')
         ];
+
+        // Aplicar la misma categoría a la tarea si existe el campo (depende de la versión/config de GLPI)
+        // En GLPI estándar las tareas no suelen tener categoría propia separada del ticket de la misma forma,
+        // pero algunos plugins o configuraciones lo permiten. Usaremos el campo si es posible o simplemente el del ticket.
         
         $task_id = $task->add($task_data);
         
         // 3. Guardar en nuestra tabla personalizada (opcional)
+        // Verificamos si la tabla existe antes de insertar (buena práctica si no estamos seguros del estado de la DB)
         $DB->query(sprintf(
             "INSERT INTO `glpi_plugin_techtask_records` 
             (tickets_id, users_id, category_id, duration_minutes, description) 
@@ -74,7 +79,7 @@ class TechTaskManager
             Session::getLoginUserID(),
             (int)($post_data['category_id'] ?? 0),
             (int)$post_data['duration'],
-            $DB->escape($post_data['description'])
+            $DB->escape($post_data['content'])
         ));
         
         return $ticket_id;

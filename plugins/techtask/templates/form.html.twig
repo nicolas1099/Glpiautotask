@@ -19,7 +19,14 @@
                 <div class="box-body">
                     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
                     
-                    <!-- Campo 1: Categoría -->
+                    <!-- Campo 1: Tiempo -->
+                    <div class="form-group">
+                        <label for="duration">{{ __('Tiempo (minutos)', 'techtask') }}</label>
+                        <input type="number" name="duration" id="duration" class="form-control" 
+                               min="1" required placeholder="{{ __('Ej: 30, 45, 60', 'techtask') }}">
+                    </div>
+
+                    <!-- Campo 2: Categoría -->
                     <div class="form-group">
                         <label for="category_id">{{ __('Categoría', 'techtask') }}</label>
                         <select name="category_id" id="category_id" class="form-control">
@@ -30,24 +37,23 @@
                         </select>
                     </div>
                     
-                    <!-- Campo 2: Duración -->
+                    <!-- Campo 3: Título -->
                     <div class="form-group">
-                        <label for="duration">{{ __('Tiempo trabajado (minutos)', 'techtask') }}</label>
-                        <input type="number" name="duration" id="duration" class="form-control" 
-                               min="1" required placeholder="{{ __('Ej: 30, 45, 60', 'techtask') }}">
-                        <p class="help-block">{{ __('Ingresa solo números (minutos)', 'techtask') }}</p>
+                        <label for="name">{{ __('Título', 'techtask') }}</label>
+                        <input type="text" name="name" id="name" class="form-control" 
+                               required placeholder="{{ __('Título de la tarea y el ticket', 'techtask') }}">
                     </div>
                     
-                    <!-- Campo 3: Descripción -->
+                    <!-- Campo 4: Descripción -->
                     <div class="form-group">
-                        <label for="description">{{ __('Descripción del trabajo', 'techtask') }}</label>
-                        <textarea name="description" id="description" class="form-control" 
-                                  rows="5" required placeholder="{{ __('Explica detalladamente...', 'techtask') }}"></textarea>
+                        <label for="content">{{ __('Descripción', 'techtask') }}</label>
+                        <textarea name="content" id="content" class="form-control" 
+                                  rows="5" required placeholder="{{ __('Descripción detallada del ticket', 'techtask') }}"></textarea>
                     </div>
                 </div>
                 
                 <div class="box-footer">
-                    <button type="submit" class="btn btn-primary">{{ __('Registrar tarea', 'techtask') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('Crear y Cerrar Ticket', 'techtask') }}</button>
                     <button type="reset" class="btn btn-default">{{ __('Limpiar', 'techtask') }}</button>
                 </div>
             </form>
