@@ -38,22 +38,29 @@ function plugin_techtask_install(): bool
 {
     global $DB;
 
+    // Verificar conexión a DB
+    if (!isset($DB) || !$DB) {
+        return false;
+    }
+
     // Crear tabla de registros si no existe
     if (!$DB->tableExists('glpi_plugin_techtask_records')) {
-        $query = "CREATE TABLE `glpi_plugin_techtask_records` (
+        $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_techtask_records` (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
             `tickets_id` INT(11) NOT NULL,
             `users_id` INT(11) NOT NULL,
             `category_id` INT(11) DEFAULT NULL,
             `duration_minutes` INT(11) NOT NULL,
             `description` TEXT,
-            `date_creation` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            `date_creation` DATETIME DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`),
             KEY `tickets_id` (`tickets_id`),
             KEY `users_id` (`users_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
         
-        $DB->query($query);
+        if (!$DB->query($query)) {
+            return false;
+        }
     }
     return true;
 }
