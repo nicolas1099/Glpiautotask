@@ -4,15 +4,20 @@
 
 include('../../../inc/includes.php');
 
+Toolbox::logInFile("techtask", "front/form.php iniciado tras include.\n");
+
 use GlpiPlugin\Techtask\TechTaskManager;
 use Glpi\Application\View\TemplateRenderer;
 
 // Asegurar que el cargador de clases esté disponible
+Toolbox::logInFile("techtask", "Verificando existencia de clase TechTaskManager...\n");
 if (!class_exists('GlpiPlugin\Techtask\TechTaskManager')) {
+    Toolbox::logInFile("techtask", "Cargando setup.php manualmente...\n");
     include_once(__DIR__ . '/../setup.php');
 }
 
 // Verificar permisos
+Toolbox::logInFile("techtask", "Verificando derechos del técnico...\n");
 try {
     if (!TechTaskManager::checkRights()) {
         Html::displayRightError();

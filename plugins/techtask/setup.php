@@ -37,9 +37,13 @@ function plugin_version_techtask() {
 function plugin_init_techtask() {
     global $PLUGIN_HOOKS;
     
+    Toolbox::logInFile("techtask", "Iniciando plugin_init_techtask...\n");
+    
     // Registrar el menú principal en el grupo "Soporte" (helpdesk)
     $PLUGIN_HOOKS['csrf_compliant']['techtask'] = true;
     $PLUGIN_HOOKS['menu_toadd']['techtask'] = ['helpdesk' => 'GlpiPlugin\Techtask\Menu'];
+    
+    Toolbox::logInFile("techtask", "plugin_init_techtask completado.\n");
 }
 
 // End of plugin_init_techtask
