@@ -73,17 +73,13 @@ class TechTaskManager
         $task_id = $task->add($task_data);
         
         // 3. Guardar en nuestra tabla personalizada (opcional)
-        // Verificamos si la tabla existe antes de insertar (buena práctica si no estamos seguros del estado de la DB)
-        $DB->query(sprintf(
-            "INSERT INTO `glpi_plugin_techtask_records` 
-            (tickets_id, users_id, category_id, duration_minutes, description) 
-            VALUES (%d, %d, %d, %d, '%s')",
-            $ticket_id,
-            Session::getLoginUserID(),
-            (int)($post_data['category_id'] ?? 0),
-            (int)$post_data['duration'],
-            $DB->escape($post_data['content'])
-        ));
+        $DB->insert('glpi_plugin_techtask_records', [
+            'tickets_id'       => $ticket_id,
+            'users_id'         => Session::getLoginUserID(),
+            'category_id'      => (int)($post_data['category_id'] ?? 0),
+            'duration_minutes' => (int)$post_data['duration'],
+            'description'      => $post_data['content']
+        ]);
         
         return $ticket_id;
     }
@@ -96,10 +92,13 @@ class TechTaskManager
         global $DB;
         
         $categories = [];
-        $query = "SELECT id, name FROM glpi_itilcategories ORDER BY name";
-        $result = $DB->query($query);
+        $iterator = $DB->request([
+            'SELECT' => ['id', 'name'],
+            'FROM'   => 'glpi_itilcategories',
+            'ORDER'  => 'name'
+        ]);
         
-        while ($row = $DB->fetchAssoc($result)) {
+        foreach ($iterator as $row) {
             $categories[] = $row;
         }
         

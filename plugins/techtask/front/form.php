@@ -27,31 +27,36 @@ try {
     echo "Fallo al cargar TechTaskManager: " . $e->getMessage();
     exit();
 }
-// Procesar el envío del formulario
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // La verificación CSRF se deshabilita temporalmente por problemas de compatibilidad con el entorno del servidor
-    // Session::checkCSRF($_POST);
-    
-    $ticket_id = TechTaskManager::processForm($_POST);
-    
-    if ($ticket_id) {
-        Session::addMessageAfterRedirect(
-            sprintf(__('Tarea registrada correctamente. Ticket #%d creado y resuelto.', 'techtask'), $ticket_id),
-            true,
-            1 // INFO
-        );
-        Html::redirect(Plugin::getWebDir('techtask') . '/front/form.php');
-    } else {
-        Session::addMessageAfterRedirect(
-            __('Error al procesar el formulario', 'techtask'),
-            false,
-            3 // ERROR
-        );
+try {
+    // Procesar el envío del formulario
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // La verificación CSRF se deshabilita temporalmente por problemas de compatibilidad con el entorno del servidor
+        // Session::checkCSRF($_POST);
+        
+        $ticket_id = TechTaskManager::processForm($_POST);
+        
+        if ($ticket_id) {
+            Session::addMessageAfterRedirect(
+                sprintf(__('Tarea registrada correctamente. Ticket #%d creado y resuelto.', 'techtask'), $ticket_id),
+                true,
+                1 // INFO
+            );
+            Html::redirect(Plugin::getWebDir('techtask') . '/front/form.php');
+        } else {
+            Session::addMessageAfterRedirect(
+                __('Error al procesar el formulario', 'techtask'),
+                false,
+                3 // ERROR
+            );
+        }
     }
-}
 
-// Cargar categorías
-$categories = TechTaskManager::getCategories() ?? [];
+    // Cargar categorías
+    $categories = TechTaskManager::getCategories() ?? [];
+} catch (\Throwable $e) {
+    Toolbox::logInFile("techtask", "Error en front/form.php: " . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n");
+    throw $e;
+}
 
 Html::header(__('Autotask', 'techtask'), $_SERVER['PHP_SELF'], 'helpdesk', 'GlpiPlugin\Techtask\Menu');
 

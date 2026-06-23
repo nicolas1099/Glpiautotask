@@ -14,8 +14,9 @@
          <!-- Add as many lang tag you want -->
          <en>A long description for techtask GLPI plugin.</en>
          <fr>Une description longue pour le plugin GLPI techtask.</fr>
+         <es>Plugin para registrar tareas técnicas con tiempo manual de manera rápida.</es>
       </long>
-   </description>Plugin para registrar tareas técnicas con tiempo manual</description>
+   </description>
    <license>MIT</license>
    <homepage>https://github.com/pluginsGLPI/techtask</homepage>
    <download>https://github.com/pluginsGLPI/techtask/releases</download>
