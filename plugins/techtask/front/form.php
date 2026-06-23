@@ -17,6 +17,9 @@ if (!class_exists('GlpiPlugin\Techtask\TechTaskManager')) {
 }
 
 try {
+    // Asegurar que el usuario tiene una sesión activa
+    Session::checkLoginUser();
+
     // Verificar permisos
     Toolbox::logInFile("techtask", "Verificando derechos del técnico...\n");
     if (!TechTaskManager::checkRights()) {
